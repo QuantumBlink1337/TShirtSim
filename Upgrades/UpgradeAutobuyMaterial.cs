@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Media3D;
 
 namespace TShirtSim.Upgrades
 {
@@ -12,7 +13,8 @@ namespace TShirtSim.Upgrades
 
         private int _amount = 0;
         private string _name = "Auto Purchase Materials";
-        private string _description =
+        private string _description = "Purchases Materials automatically when you run out";
+        private string _filename = "AutobuyMaterial.png";
 
 
 
@@ -23,7 +25,8 @@ namespace TShirtSim.Upgrades
         public int amount { get { return _amount; } set { _amount = value; } }
 
         public string Name { get => _name; }
-        public string Description { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string Description { get => _description; }
+        public string IconFileName { get => _filename; }    
 
         public bool Purchase(PlayerInformation player)
         {

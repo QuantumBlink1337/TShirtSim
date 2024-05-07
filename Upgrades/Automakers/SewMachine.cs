@@ -13,6 +13,8 @@ namespace TShirtSim.Upgrades.Automakers
         private int _cost = 250;
         private int _amount = 0;
         private string _name = "Sewing Machine";
+        private string _description = $"Produces t-shirts automatically";
+        private string _filename = "SewingMachine1.png";
 
 
         public UpgradeTypes upgradeType => UpgradeTypes.AutoSewingMachine;
@@ -22,6 +24,9 @@ namespace TShirtSim.Upgrades.Automakers
         public int cost { get => _cost; set => _cost = value; }
         public int amount { get => _amount; set => _amount = value; }
         public string Name { get => _name; set => _name = value; }
+        public string Description { get => _description; }
+        public string IconFileName { get => _filename; }
+
 
         public SewMachine()
         {

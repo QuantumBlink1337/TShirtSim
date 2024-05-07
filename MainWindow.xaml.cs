@@ -217,8 +217,8 @@ namespace TShirtSim
                 {
                     var automat = _gameState.PlayerInformation.Upgrades.Find(upgrade => upgrade.upgradeType == UpgradeTypes.UpgradeAutobuyMaterial) as UpgradeAutobuyMaterial;
                     Button button = SetUpButton("AutoMaterialUpgradeButton", 
-                        LoadBitmap("AutobuyMaterial.png", 800), 
-                        $"{automat.Name} ${automat.cost}\nPurchases Materials automatically when you run out");
+                        LoadBitmap(automat.IconFileName, 800), 
+                        $"{automat.Name} ${automat.cost}\n{automat.Description}");
                     button.Click += (object? sender, RoutedEventArgs e) =>
                     {
                         if (_gameState.HandleUpgradePurchase(UpgradeTypes.UpgradeAutobuyMaterial))
@@ -237,7 +237,7 @@ namespace TShirtSim
                 {
                     var marketing = _gameState.PlayerInformation.Upgrades.Find(upgrade => upgrade.upgradeType == UpgradeTypes.UpgradeMarketing) as UpgradeMarketing;
                     
-                    Button button = SetUpButton("MarketingLevel1UpgradeButton", LoadBitmap("Marketing.png", 800), $"{marketing.Name} ${marketing.cost}\nHigher public interest for your T-Shirts");
+                    Button button = SetUpButton("MarketingLevel1UpgradeButton", LoadBitmap(marketing.IconFileName, 800), $"{marketing.Name} ${marketing.cost}\n{marketing.Description}");
                     button.Click += (object? sender, RoutedEventArgs e) =>
                     {
                         if (_gameState.HandleUpgradePurchase(UpgradeTypes.UpgradeMarketing))
