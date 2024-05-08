@@ -100,8 +100,8 @@ namespace TShirtSim
                 {
                     case UpgradeTypes.AutoSewingMachine: OnRaiseSewMachinePurchased(1); break;
                 }
-                upgrade.Cost = (int)(upgrade.Cost * 0.05) + (upgrade.Cost);
-                UpgradeAmounts[upgrade.UpgradeType] = upgrade.Amount;
+                upgrade.cost = (int)(upgrade.cost * 0.05) + (upgrade.cost);
+                UpgradeAmounts[upgrade.upgradeType] = upgrade.amount;
                 return true;
             }
             return false;

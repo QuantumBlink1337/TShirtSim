@@ -23,7 +23,6 @@ namespace TShirtSim.Upgrades
 
         public UpgradeTypes UpgradeType => throw new NotImplementedException();
 
-        public int Amount { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public bool Purchase(PlayerInformation player)
         {
