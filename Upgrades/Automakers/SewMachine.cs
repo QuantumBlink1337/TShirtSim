@@ -15,17 +15,19 @@ namespace TShirtSim.Upgrades.Automakers
         private string _name = "Sewing Machine";
         private string _description = $"Produces t-shirts automatically";
         private string _filename = "SewingMachine1.png";
+        private string _filename2 = "SewingMachine2.png";
 
 
         public UpgradeTypes UpgradeType => UpgradeTypes.AutoSewingMachine;
 
-        public int? rateOfMake => _rate;
+        public int? RateOfMake => _rate;
 
         public int Cost { get => _cost; set => _cost = value; }
         public int Amount { get => _amount; set => _amount = value; }
         public string Name { get => _name; set => _name = value; }
         public string Description { get => _description; }
         public string IconFileName { get => _filename; }
+        public string IconFileName2 { get => _filename2; }
 
 
         public SewMachine()

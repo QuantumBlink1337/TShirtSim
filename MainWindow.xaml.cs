@@ -238,7 +238,7 @@ namespace TShirtSim
             var upgrade = _gameState.PlayerInformation.Upgrades.Find(upgrade => upgrade is SewMachine) as AutoMaker;
             var cost = upgrade.Cost.ToString("C", CultureInfo.CurrentCulture);
             var amount = upgrade.Amount;
-            var rate = upgrade.rateOfMake;
+            var rate = upgrade.RateOfMake;
             var description = upgrade.Description;
            
             if (amount > SewMachineCanvas.Children.Count)

@@ -9,7 +9,8 @@ namespace TShirtSim.Upgrades.Automakers
 {
     internal interface AutoMaker : Upgrade
     {
-        int? rateOfMake { get; }
+        int? RateOfMake { get; }
+        string IconFileName2 { get; }
 
     }
 }

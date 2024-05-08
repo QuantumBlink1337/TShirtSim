@@ -80,9 +80,9 @@ namespace TShirtSim
             {
                 switch (maker.UpgradeType)
                 {
-                    case UpgradeTypes.AutoSewingMachine: OnRaiseSewMachineMake(100/(int)maker.rateOfMake * 5); break; 
+                    case UpgradeTypes.AutoSewingMachine: OnRaiseSewMachineMake(100/(int)maker.RateOfMake * 5); break; 
                 }
-                MakeTShirt(maker.rateOfMake * maker.Amount);
+                MakeTShirt(maker.RateOfMake * maker.Amount);
             }
             MaterialPrice = random.Next(70, 120);
 
