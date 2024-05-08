@@ -64,9 +64,9 @@ namespace TShirtSim
             foreach (Upgrade upgrade in Upgrades)
             {
                 
-                upgrade.amount = UpgradeAmounts[upgrade.upgradeType];
-                upgrade.cost = (int)(upgrade.cost * (upgrade.amount * 0.05)) + upgrade.cost;
-                if (upgrade.upgradeType == UpgradeTypes.AutoSewingMachine)
+                upgrade.Amount = UpgradeAmounts[upgrade.UpgradeType];
+                upgrade.Cost = (int)(upgrade.Cost * (upgrade.Amount * 0.05)) + upgrade.Cost;
+                if (upgrade.UpgradeType == UpgradeTypes.AutoSewingMachine)
                 {
                     
                 }
@@ -78,30 +78,30 @@ namespace TShirtSim
             Random random = new Random();
             foreach (AutoMaker maker in Upgrades.FindAll(upgrade => upgrade is AutoMaker))
             {
-                switch (maker.upgradeType)
+                switch (maker.UpgradeType)
                 {
                     case UpgradeTypes.AutoSewingMachine: OnRaiseSewMachineMake(100/(int)maker.rateOfMake * 5); break; 
                 }
-                MakeTShirt(maker.rateOfMake * maker.amount);
+                MakeTShirt(maker.rateOfMake * maker.Amount);
             }
             MaterialPrice = random.Next(70, 120);
 
         }
         public bool PurchaseUpgrade(UpgradeTypes upgradeType)
         {
-            Upgrade? upgrade = Upgrades.Find(upgrade => upgrade.upgradeType == upgradeType);
+            Upgrade? upgrade = Upgrades.Find(upgrade => upgrade.UpgradeType == upgradeType);
             if (upgrade == null)
             {
                 return false;
             }
             if (upgrade.Purchase(this))
             {
-                switch (upgrade.upgradeType)
+                switch (upgrade.UpgradeType)
                 {
                     case UpgradeTypes.AutoSewingMachine: OnRaiseSewMachinePurchased(1); break;
                 }
-                upgrade.cost = (int)(upgrade.cost * 0.05) + (upgrade.cost);
-                UpgradeAmounts[upgrade.upgradeType] = upgrade.amount;
+                upgrade.Cost = (int)(upgrade.Cost * 0.05) + (upgrade.Cost);
+                UpgradeAmounts[upgrade.UpgradeType] = upgrade.Amount;
                 return true;
             }
             return false;

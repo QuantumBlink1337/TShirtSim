@@ -14,11 +14,11 @@ namespace TShirtSim.Upgrades
         private string _name = "Marketing 1";
         private string _description = "25% more public interest for your T-Shirts";
         private string _filename = "Marketing.png";
-        public int cost { get => _cost; set => _cost = value; }
+        public int Cost { get => _cost; set => _cost = value; }
 
-        public UpgradeTypes upgradeType => UpgradeTypes.UpgradeMarketing;
+        public UpgradeTypes UpgradeType => UpgradeTypes.UpgradeMarketing;
 
-        public int amount { get { return _amount; } set { _amount = value; } }
+        public int Amount { get { return _amount; } set { _amount = value; } }
 
         public string Name { get => _name; }
         public string Description { get => _description; }
@@ -26,14 +26,14 @@ namespace TShirtSim.Upgrades
 
         public bool Purchase(PlayerInformation player)
         {
-            if (player.Treasury < cost)
+            if (player.Treasury < Cost)
             {
                 return false;
             }
-            player.Treasury -= cost;
+            player.Treasury -= Cost;
             player.PublicInterestScalar += 0.25;
-            _name = $"Marketing {amount + 2}";
-            cost *= 2;
+            _name = $"Marketing {Amount + 2}";
+            Cost *= 2;
             return true;
         }
     }

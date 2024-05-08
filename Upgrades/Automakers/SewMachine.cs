@@ -17,12 +17,12 @@ namespace TShirtSim.Upgrades.Automakers
         private string _filename = "SewingMachine1.png";
 
 
-        public UpgradeTypes upgradeType => UpgradeTypes.AutoSewingMachine;
+        public UpgradeTypes UpgradeType => UpgradeTypes.AutoSewingMachine;
 
         public int? rateOfMake => _rate;
 
-        public int cost { get => _cost; set => _cost = value; }
-        public int amount { get => _amount; set => _amount = value; }
+        public int Cost { get => _cost; set => _cost = value; }
+        public int Amount { get => _amount; set => _amount = value; }
         public string Name { get => _name; set => _name = value; }
         public string Description { get => _description; }
         public string IconFileName { get => _filename; }
@@ -33,13 +33,13 @@ namespace TShirtSim.Upgrades.Automakers
         }
         public SewMachine(int c, int a)
         {
-            cost = c;
-            amount = a;
+            Cost = c;
+            Amount = a;
         }
 
         public bool Purchase(PlayerInformation player)
         {
-            if (player.Treasury < cost)
+            if (player.Treasury < Cost)
             {
                 return false;
             }
