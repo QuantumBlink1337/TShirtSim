@@ -16,7 +16,7 @@ namespace TShirtSim.Upgrades
 
 
 
-        public int cost { get { return _cost; } set { _cost = value; } }
+        public int Cost { get { return _cost; } set { _cost = value; } }
 
         public UpgradeTypes upgradeType => UpgradeTypes.UpgradeMaterialBundle;
 
@@ -28,11 +28,11 @@ namespace TShirtSim.Upgrades
 
         public bool Purchase(PlayerInformation player)
         {
-            if (player.Treasury < cost)
+            if (player.Treasury < Cost)
             {
                 return false;
             }
-            player.Treasury -= cost;
+            player.Treasury -= Cost;
             player.MaterialBundle += (int)(player.MaterialBundle * .5);
             return true;
         }

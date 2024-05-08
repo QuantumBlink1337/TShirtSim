@@ -11,7 +11,7 @@ namespace TShirtSim.Upgrades
         string Name { get; }
         string Description { get; }
         string IconFileName { get; }
-        int cost { get; set; }
+        int Cost { get; set; }
         UpgradeTypes upgradeType { get; }
         int amount { get; set; }
         public bool Purchase(PlayerInformation player);

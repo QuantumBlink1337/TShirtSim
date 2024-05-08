@@ -236,7 +236,7 @@ namespace TShirtSim
         private void UpdateSewingMachineGrid()
         {
             var upgrade = _gameState.PlayerInformation.Upgrades.Find(upgrade => upgrade is SewMachine) as AutoMaker;
-            var cost = upgrade.cost.ToString("C", CultureInfo.CurrentCulture);
+            var cost = upgrade.Cost.ToString("C", CultureInfo.CurrentCulture);
             var amount = upgrade.amount;
             var rate = upgrade.rateOfMake;
             var description = upgrade.Description;
@@ -286,7 +286,7 @@ namespace TShirtSim
                         {
                             Button button = SetUpButton(name,
                             LoadBitmap(upgrade.IconFileName, 800),
-                            $"{upgrade.Name} ${upgrade.cost}\n{upgrade.Description}");
+                            $"{upgrade.Name} ${upgrade.Cost}\n{upgrade.Description}");
                             button.Click += (object? sender, RoutedEventArgs e) =>
                             {
                                 if (_gameState.HandleUpgradePurchase(upgradeType))

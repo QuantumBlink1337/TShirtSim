@@ -21,7 +21,7 @@ namespace TShirtSim.Upgrades.Automakers
 
         public int? rateOfMake => _rate;
 
-        public int cost { get => _cost; set => _cost = value; }
+        public int Cost { get => _cost; set => _cost = value; }
         public int amount { get => _amount; set => _amount = value; }
         public string Name { get => _name; set => _name = value; }
         public string Description { get => _description; }
@@ -33,13 +33,13 @@ namespace TShirtSim.Upgrades.Automakers
         }
         public SewMachine(int c, int a)
         {
-            cost = c;
+            Cost = c;
             amount = a;
         }
 
         public bool Purchase(PlayerInformation player)
         {
-            if (player.Treasury < cost)
+            if (player.Treasury < Cost)
             {
                 return false;
             }
