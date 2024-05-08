@@ -34,7 +34,7 @@ namespace TShirtSim
         private TimeSpan _timespan = TimeSpan.FromMilliseconds(50);
         private GameState _gameState;
 
-        private Image draggedImage;
+        private Image? draggedImage;
         private Point mousePosition;
 
 
@@ -301,7 +301,43 @@ namespace TShirtSim
             _gameState.HandleUpgradePurchase(UpgradeTypes.AutoSewingMachine);
         }
 
-       
-        
+        private void AutomakerCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var image = e.Source as Image;
+            var canvas = sender as Canvas;
+            if (image != null && canvas.CaptureMouse()) 
+            {
+                mousePosition = e.GetPosition(canvas);
+                draggedImage = image;
+            }
+        }
+
+        private void AutomakerCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var canvas = sender as Canvas;
+            if (draggedImage != null)
+            {
+                canvas.ReleaseMouseCapture();
+                draggedImage = null;
+            }
+        }
+
+        private void AutomakerCanvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            var canvas = sender as Canvas;
+            if (draggedImage != null)
+            {
+                var position = e.GetPosition(canvas);
+                var offset = position - mousePosition;
+                var X = offset.X; 
+                var Y = offset.Y;
+               
+                mousePosition = position;
+                Canvas.SetLeft(draggedImage, Canvas.GetLeft(draggedImage) + offset.X);
+                Canvas.SetTop(draggedImage, Canvas.GetTop(draggedImage) + offset.Y);
+
+
+            }
+        }
     }
 }

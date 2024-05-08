@@ -43,7 +43,7 @@
                 <Grid Name="SewingMachGrid" Margin="10,65,10,426" Background="LightBlue" Visibility="Visible">
                     <Label Content="Sewing Machine" FontSize="20" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="137,10,0,0" VerticalAlignment="Top" Width="261"/>
                     <Button Name="SewingMachinePurchase" Content="Purchase" HorizontalContentAlignment="Center" FontSize="20" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="Button_BuySewMachine" Width="122" Height="40"/>
-                    <Canvas Name="SewMachineCanvas" Margin="10,55,10,10"/>
+                    <Canvas Name="SewMachineCanvas" Margin="10,55,10,10" MouseLeftButtonDown="AutomakerCanvas_MouseLeftButtonDown" MouseLeftButtonUp="AutomakerCanvas_MouseLeftButtonUp" MouseMove="AutomakerCanvas_MouseMove" />
                 </Grid>
 
             </Grid>
