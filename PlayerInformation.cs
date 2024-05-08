@@ -16,6 +16,7 @@ namespace TShirtSim
         public Dictionary<UpgradeTypes, int> UpgradeAmounts { get; set; }
         public event EventHandler<int> TShirtMade;
         public event EventHandler<int> SewMachinePurchased;
+        public event EventHandler<int> SewMachineMake;
 
         public double PublicInterest {  get; set; }
         public double PublicInterestScalar { get; set; }
@@ -77,6 +78,10 @@ namespace TShirtSim
             Random random = new Random();
             foreach (AutoMaker maker in Upgrades.FindAll(upgrade => upgrade is AutoMaker))
             {
+                switch (maker.upgradeType)
+                {
+                    case UpgradeTypes.AutoSewingMachine: OnRaiseSewMachineMake(100/(int)maker.rateOfMake * 5); break; 
+                }
                 MakeTShirt(maker.rateOfMake * maker.amount);
             }
             MaterialPrice = random.Next(70, 120);
@@ -138,6 +143,14 @@ namespace TShirtSim
         protected virtual void OnRaiseSewMachinePurchased(int e)
         {
             EventHandler<int> raiseEvent = SewMachinePurchased;
+            if (raiseEvent != null)
+            {
+                raiseEvent(this, e);
+            }
+        }
+        protected virtual void OnRaiseSewMachineMake(int e)
+        {
+            EventHandler<int> raiseEvent = SewMachineMake;
             if (raiseEvent != null)
             {
                 raiseEvent(this, e);

@@ -49,6 +49,7 @@ namespace TShirtSim
             
             _gameState.PlayerInformation.TShirtMade += HandleTShirtMadeAnimation;
             _gameState.PlayerInformation.SewMachinePurchased += HandlePlaceSewMachine;
+            _gameState.PlayerInformation.SewMachineMake += HandleSewMachineMake;
 
 
 
@@ -94,6 +95,24 @@ namespace TShirtSim
                 SewingMachine.Source = image2;
             };
             SewingMachine.Source = image1;
+        }
+        private void CycleSewMachineAnimation(int milli)
+        {
+            var collection = SewMachineCanvas.Children;
+            foreach (Image item in collection)
+            {
+                item.Source = image1;
+            }
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(milli) };
+            timer.Tick += (sender, args) =>
+            {
+                timer.Stop();
+                foreach (Image item in collection)
+                {
+                    item.Source = image2;
+                }
+            };
+            timer.Start();
 
 
         }
@@ -129,6 +148,10 @@ namespace TShirtSim
         {
             PlaceSewMachine();
 
+        }
+        private void HandleSewMachineMake(object sender, int e)
+        {
+            CycleSewMachineAnimation(e);
         }
         private void PlaceSewMachine()
         {
