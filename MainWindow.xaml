@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TShirtSim"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1080" Width="1920">
-    <Viewbox>
+        Title="T-Shirt Simulator" Height="1080" Width="1920">
+    <Viewbox Name="TShirtViewBox">
         <Grid>
             <Grid Margin="20,175,1250,493" Name="BusinessGrid">
                 <Button Content="Make T-Shirt" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Top" Click="Button_MakeTShirt" Width="190" Height="49" Margin="0,52,0,0"/>
@@ -33,7 +33,7 @@
 
             <Grid   Height="172" Margin="20,725,1052,0" VerticalAlignment="Top" Background="LightGray">
                 <Label Content="Upgrades" HorizontalAlignment="Left" HorizontalContentAlignment="Center"  Margin="10,5,0,0" VerticalAlignment="Top" Width="651" FontSize="30"/>
-                <StackPanel Name="UpgradePanel" Margin="0,60,10,0" Orientation="Horizontal"/>
+                <StackPanel Name="UpgradePanel" Margin="10,60,10,10" Orientation="Horizontal"/>
 
 
             </Grid>

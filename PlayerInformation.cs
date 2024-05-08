@@ -72,23 +72,6 @@ namespace TShirtSim
                 
             }
         }
-        public void FireInitialEvents()
-        {
-            foreach (Upgrade upgrade in Upgrades)
-            {
-
-                
-                if (upgrade.upgradeType == UpgradeTypes.AutoSewingMachine)
-                {
-                    for (int i = 0; i < upgrade.amount; i++)
-                    {
-                        OnRaiseSewMachinePurchased(1);
-
-                    }
-                }
-
-            }
-        }
         public void CalculateTShirt()
         {
             Random random = new Random();
