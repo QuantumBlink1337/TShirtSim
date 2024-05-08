@@ -31,6 +31,9 @@ namespace TShirtSim
         private BitmapImage image1 {  get; set; }
         private BitmapImage image2 { get; set; }
 
+        private BitmapImage tshirt1 { get; set; }
+        private BitmapImage tshirt2 {  get; set; }
+
         private TimeSpan _timespan = TimeSpan.FromMilliseconds(50);
         private GameState _gameState;
 
@@ -43,12 +46,12 @@ namespace TShirtSim
         public MainWindow()
         {
             InitializeComponent();
-            InitializeSewingMachineAnimation();
+            InitializeMakeTShirtAni();
             LoadGameState();
             SetupTimers();
             
-            _gameState.PlayerInformation.TShirtMade += HandleTShirtMadeAnimation;
-            _gameState.PlayerInformation.SewMachinePurchased += HandlePlaceSewMachine;
+/*            _gameState.PlayerInformation.TShirtMade += HandleTShirtMadeAnimation;
+*/            _gameState.PlayerInformation.SewMachinePurchased += HandlePlaceSewMachine;
             _gameState.PlayerInformation.SewMachineMake += HandleSewMachineMake;
 
 
@@ -77,14 +80,24 @@ namespace TShirtSim
             _gameState.PlayerInformation.LoadData();
             _gameState.InitializeTimers();
         }
-        private void InitializeSewingMachineAnimation()
+        private void InitializeMakeTShirtAni()
         {
 
             image1 = LoadBitmap("SewingMachine1.png", 1920.00);
             image2 = LoadBitmap("SewingMachine2.png", 1920.00);
-            SewingMachine.Source = image2;
-        }
-        private void CycleAnimation(int milli)
+
+
+            
+            tshirt1 = LoadBitmap("EmptyTShirt.png", 1000);
+            tshirt2 = LoadBitmap("EmptyTShirt2.png", 1000);
+
+
+            TShirtMake.Content = new Image { Source = tshirt1};
+            
+
+/*            SewingMachine.Source = image2;
+*/        }
+       /* private void CycleAnimation(int milli)
         {
             SewingMachine.Source = image1;
             var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(milli) };
@@ -95,7 +108,7 @@ namespace TShirtSim
                 SewingMachine.Source = image2;
             };
             SewingMachine.Source = image1;
-        }
+        }*/
         private void CycleSewMachineAnimation(int milli)
         {
             var collection = SewMachineCanvas.Children;
@@ -113,9 +126,34 @@ namespace TShirtSim
                 }
             };
             timer.Start();
-
-
         }
+        private void CycleTShirtmakeAnimation()
+        {
+            TShirtMake.Content = new Image { Source = tshirt1 };
+            var milli = 25;
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(milli) };
+            var timer2 = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(milli) };
+            timer.Tick += (sender, args) =>
+            {
+                timer.Stop();
+                TShirtMake.Content = new Image { Source = tshirt2 };
+                timer2.Start();
+
+
+            };
+            timer.Start();
+            timer2.Tick += (sender, args) =>
+            {
+                timer2.Stop();
+                TShirtMake.Content = new Image { Source = tshirt1 };
+
+
+            };
+            timer.Start();
+        }
+
+       
+
         private BitmapImage LoadBitmap(string assetsRelativePath, double decodeWidth)
         {
             BitmapImage theBitmap = new BitmapImage();
@@ -140,10 +178,10 @@ namespace TShirtSim
             _timer_fast.Start();
            
         }
-        private void HandleTShirtMadeAnimation(object sender, int e)
+       /* private void HandleTShirtMadeAnimation(object sender, int e)
         {
             CycleAnimation(e);
-        }
+        }*/
         private void HandlePlaceSewMachine(object sender, int e)
         {
             PlaceSewMachine();
@@ -151,7 +189,7 @@ namespace TShirtSim
         }
         private void HandleSewMachineMake(object sender, int e)
         {
-            CycleSewMachineAnimation(e);
+            CycleSewMachineAnimation(e); 
         }
         private void PlaceSewMachine()
         {
@@ -171,6 +209,9 @@ namespace TShirtSim
         {
             if (_gameState.PlayerInformation.MakeTShirt(1))
             {
+                CycleTShirtmakeAnimation();
+                TShirtMake.Content = new Image { Source = tshirt1 };
+
             }
         }
 
@@ -233,37 +274,41 @@ namespace TShirtSim
             {
                 SewingMachGrid.Visibility = Visibility.Visible;
             }
-            foreach (UpgradeTypes upgradeType in _gameState.UnlockPurchases.Keys) 
+            if (UpgradePanel.Children.Count <= 4)
             {
-                var upgrade = _gameState.PlayerInformation.Upgrades.Find(upgrade => upgrade.upgradeType == upgradeType);
-                if (_gameState.UnlockPurchases[upgradeType].Unlocked && !_gameState.UnlockPurchases[upgradeType].Purchase && !(upgrade is AutoMaker) )
+                foreach (UpgradeTypes upgradeType in _gameState.UnlockPurchases.Keys)
                 {
-                    var name = upgrade.Name;
-                    if (!CheckButtonExistence(Utility.ReplaceWhitespace(name, "") + "Button"))
+                    var upgrade = _gameState.PlayerInformation.Upgrades.Find(upgrade => upgrade.upgradeType == upgradeType);
+                    if (_gameState.UnlockPurchases[upgradeType].Unlocked && !_gameState.UnlockPurchases[upgradeType].Purchase && !(upgrade is AutoMaker))
                     {
-                        Button button = SetUpButton(name,
-                        LoadBitmap(upgrade.IconFileName, 800),
-                        $"{upgrade.Name} ${upgrade.cost}\n{upgrade.Description}");
-                        button.Click += (object? sender, RoutedEventArgs e) =>
+                        var name = upgrade.Name;
+                        if (!CheckButtonExistence(Utility.ReplaceWhitespace(name, "") + "Button"))
                         {
-                            if (_gameState.HandleUpgradePurchase(upgradeType))
+                            Button button = SetUpButton(name,
+                            LoadBitmap(upgrade.IconFileName, 800),
+                            $"{upgrade.Name} ${upgrade.cost}\n{upgrade.Description}");
+                            button.Click += (object? sender, RoutedEventArgs e) =>
                             {
-                                var purchase = _gameState.UnlockPurchases[upgradeType];
-                                purchase.Purchase = true;
-                                _gameState.UnlockPurchases[upgradeType] = purchase;
-                                UpgradePanel.Children.Remove(button);
+                                if (_gameState.HandleUpgradePurchase(upgradeType))
+                                {
+                                    var purchase = _gameState.UnlockPurchases[upgradeType];
+                                    purchase.Purchase = true;
+                                    _gameState.UnlockPurchases[upgradeType] = purchase;
+                                    UpgradePanel.Children.Remove(button);
 
-                            }
-                        };
-                        
-                        UpgradePanel.Children.Add(button);
-                        this.Width = x;
-                        this.Height = y;
-                        
+                                }
+                            };
 
+                            UpgradePanel.Children.Add(button);
+                            this.Width = x;
+                            this.Height = y;
+
+
+                        }
                     }
                 }
-            } 
+            }
+            
         }
         
         private Button SetUpButton(string name, BitmapImage image, string tooltip)

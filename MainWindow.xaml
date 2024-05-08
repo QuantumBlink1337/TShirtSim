@@ -6,38 +6,93 @@
         xmlns:local="clr-namespace:TShirtSim"
         mc:Ignorable="d"
         Title="T-Shirt Simulator" Height="1080" Width="1920">
+    <Window.Resources>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" SnapsToDevicePixels="true" StrokeThickness="1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+        <Style x:Key="ButtonStyle1" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Viewbox Name="TShirtViewBox">
         <Grid>
-            <Grid Margin="20,175,1250,493" Name="BusinessGrid">
-                <Button Content="Make T-Shirt" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Top" Click="Button_MakeTShirt" Width="190" Height="49" Margin="0,52,0,0"/>
-                <Label Content="Unsold Inv: " FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,106,0,0" Width="234" Height="32"/>
-                <Label x:Name="UnsoldInv" Content="50" FontSize="20" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="376,106,0,0" Width="77" Height="32" RenderTransformOrigin="1.254,0.549"/>
-                <Button Content="Raise Price" FontSize="20" HorizontalAlignment="Left" Margin="0,145,0,0" VerticalAlignment="Top" Click="Button_RaisePrice" Height="39" Width="116"/>
-                <Button Content="Lower Price" FontSize="20" HorizontalAlignment="Left" Margin="121,145,0,0" VerticalAlignment="Top" Click="Button_LowerPrice" Height="39" Width="116" RenderTransformOrigin="0.483,0.273"/>
-                <Label x:Name="Interest" FontSize="20" Content="100%" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="376,184,0,0" Width="77" RenderTransformOrigin="0.844,0.482" Height="60"/>
-                <Label Content="Public Interest:"  FontSize="20" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,190,0,0" Width="234" RenderTransformOrigin="0.5,0.5" Height="54"/>
-                <Label Content="Price:" FontSize="20" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="242,145,0,0" Width="134" RenderTransformOrigin="0.844,0.482" Height="39"/>
-                <Label Name="PriceLabel" FontSize="20" Content="$5" HorizontalContentAlignment="Center" VerticalAlignment="Top" Margin="376,145,0,0" RenderTransformOrigin="0.844,0.482" HorizontalAlignment="Left" Width="77" Height="39"/>
+            <Grid Margin="20,175,1250,556" Name="BusinessGrid">
+                <Label Content="Unsold Inv: " FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,40,0,0" Width="234" Height="32"/>
+                <Label x:Name="UnsoldInv" Content="50" FontSize="20" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="376,40,0,0" Width="77" Height="32" RenderTransformOrigin="1.254,0.549"/>
+                <Button Content="Raise Price" FontSize="20" HorizontalAlignment="Left" Margin="0,77,0,0" VerticalAlignment="Top" Click="Button_RaisePrice" Height="39" Width="116"/>
+                <Button Content="Lower Price" FontSize="20" HorizontalAlignment="Left" Margin="121,77,0,0" VerticalAlignment="Top" Click="Button_LowerPrice" Height="39" Width="116" RenderTransformOrigin="0.483,0.273"/>
+                <Label x:Name="Interest" FontSize="20" Content="100%" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="376,122,0,0" Width="77" RenderTransformOrigin="0.844,0.482" Height="60"/>
+                <Label Content="Public Interest:"  FontSize="20" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="3,128,0,0" Width="234" RenderTransformOrigin="0.5,0.5" Height="54"/>
+                <Label Content="Price:" FontSize="20" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="242,77,0,0" Width="134" RenderTransformOrigin="0.844,0.482" Height="39"/>
+                <Label Name="PriceLabel" FontSize="20" Content="$5" HorizontalContentAlignment="Center" VerticalAlignment="Top" Margin="376,77,0,0" RenderTransformOrigin="0.844,0.482" HorizontalAlignment="Left" Width="77" Height="39"/>
                 <Label Content="Business" Background="LightGray" FontSize="20" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" Height="35" Width="457"/>
             </Grid>
             <Grid Margin="20,10,1250,752">
                 <Label Name="Treasury" HorizontalContentAlignment="Center" Content="Available Funds: $5000" FontSize="32" HorizontalAlignment="Center" Margin="0,82,0,0" VerticalAlignment="Top" Height="68" Width="454"/>
                 <Label Name="TotalSold" HorizontalContentAlignment="Center" Content="Total T-Shirts Sold: 5000" FontSize="32" HorizontalAlignment="Center" Margin="0,21,0,0" VerticalAlignment="Top" Height="59" Width="454"/>
             </Grid>
-            <Grid Margin="20,461,1249,324" x:Name="ProductionGrid"  >
+            <Grid Margin="20,362,1249,423" x:Name="ProductionGrid"  >
                 <Label Content="Production" Background="LightGray" FontSize="20" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" Height="35" Width="464"/>
                 <Label Content="Materials:" FontSize="20" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,60,0,0" Height="43" Width="107"/>
                 <Label Name="MaterialsLabel"  FontSize="20" Content="1000" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="112,60,0,0" Width="59" Height="43" RenderTransformOrigin="0.44,1.19"/>
                 <Button Name="PurchaseMaterialButton" FontSize="20" Content="Purchase Materials: $150" HorizontalAlignment="Left" Margin="232,60,0,0" VerticalAlignment="Top" Click="Button_BuyMaterial" Width="232" Height="43"/>
             </Grid>
 
-            <Grid   Height="172" Margin="20,725,1052,0" VerticalAlignment="Top" Background="LightGray">
-                <Label Content="Upgrades" HorizontalAlignment="Left" HorizontalContentAlignment="Center"  Margin="10,5,0,0" VerticalAlignment="Top" Width="651" FontSize="30"/>
+            <Grid   Height="172" Margin="20,495,1249,0" VerticalAlignment="Top" Background="LightGray">
+                <Label Content="Upgrades" HorizontalAlignment="Center" HorizontalContentAlignment="Center"  Margin="0,5,0,0" VerticalAlignment="Top" Width="444" Height="55" FontSize="30"/>
                 <StackPanel Name="UpgradePanel" Margin="10,60,10,10" Orientation="Horizontal"/>
 
 
             </Grid>
-            <Image Name="SewingMachine" HorizontalAlignment="Left" Height="456" Margin="625,175,0,0" VerticalAlignment="Top" Width="474" />
+            <Button Style="{DynamicResource ButtonStyle1}" Background="White"  Name="TShirtMake" BorderThickness="0" HorizontalAlignment="Center" Height="450" VerticalAlignment="Center" Width="450
+                    " Click="Button_MakeTShirt" />
             <Grid Name="AutomationGrid" Margin="1295,0,10,264" Background="LightGray">
                 <Label Content="Automation" FontSize="30" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Width="408"/>
                 <Grid Name="SewingMachGrid" Margin="10,65,10,426" Background="LightBlue" Visibility="Visible">
