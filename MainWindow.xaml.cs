@@ -15,6 +15,8 @@ using System.Reflection;
 using System.Globalization;
 using TShirtSim.Upgrades;
 using TShirtSim.Upgrades.Automakers;
+using System.Xml.Linq;
+using System.Reflection.Metadata;
 
 namespace TShirtSim
 {
@@ -32,6 +34,9 @@ namespace TShirtSim
         private TimeSpan _timespan = TimeSpan.FromMilliseconds(50);
         private GameState _gameState;
 
+        private Image draggedImage;
+        private Point mousePosition;
+
 
 
 
@@ -45,7 +50,6 @@ namespace TShirtSim
             _gameState.PlayerInformation.TShirtMade += HandleTShirtMadeAnimation;
             _gameState.PlayerInformation.SewMachinePurchased += HandlePlaceSewMachine;
 
-            _gameState.PlayerInformation.FireInitialEvents();
 
 
         }
@@ -123,19 +127,22 @@ namespace TShirtSim
         }
         private void HandlePlaceSewMachine(object sender, int e)
         {
+            PlaceSewMachine();
+
+        }
+        private void PlaceSewMachine()
+        {
             Random random = new Random();
-            var x = random.Next(0, (int)(SewMachineCanvas.ActualWidth/1.4));
-            var y = random.Next(0, (int)(SewMachineCanvas.ActualHeight/1.4));
+            var x = random.Next(0, (int)(SewMachineCanvas.ActualWidth / 1.4));
+            var y = random.Next(0, (int)(SewMachineCanvas.ActualHeight / 1.4));
 
             Image image = new Image() { Source = LoadBitmap("SewingMachine1.png", 100) };
-            image.Width = SewMachineCanvas.ActualWidth/2;
-            image.Height = SewMachineCanvas.ActualHeight/2;
+            image.Width = SewMachineCanvas.ActualWidth / 2;
+            image.Height = SewMachineCanvas.ActualHeight / 2;
             Canvas.SetTop(image, y);
             Canvas.SetLeft(image, x);
             SewMachineCanvas.Children.Add(image);
-
         }
-
 
         private void Button_MakeTShirt(object sender, RoutedEventArgs e)
         {
@@ -168,7 +175,17 @@ namespace TShirtSim
             var cost = upgrade.cost.ToString("C", CultureInfo.CurrentCulture);
             var amount = upgrade.amount;
             var rate = upgrade.rateOfMake;
-            SewingMachinePurchase.ToolTip = $"Cost: {cost}\nAmount: {amount}\nRate: {rate} per sec";
+            var description = upgrade.Description;
+           
+            if (amount > SewMachineCanvas.Children.Count)
+            {
+                var count = amount - SewMachineCanvas.Children.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    PlaceSewMachine();
+                }
+            }
+            SewingMachinePurchase.ToolTip = $"{description}\nCost: {cost}\nAmount: {amount}\nRate: {rate} per sec";
            }
         private void UpdateProductionGrid()
         {
@@ -187,84 +204,59 @@ namespace TShirtSim
         }
         private void UpdateVisibility(object? sender, EventArgs e)
         {
-            if (_gameState.HasUnlockedSewingMachine == true)
+            var x = this.Width;
+            var y = this.Height;
+            if (_gameState.UnlockPurchases[UpgradeTypes.AutoSewingMachine].Unlocked == true)
             {
                 SewingMachGrid.Visibility = Visibility.Visible;
             }
-            if (_gameState.HasUnlockedBiggerMaterial1 == true && _gameState.HasPurchasedBiggerMaterial1 == false) {
-                if (!CheckButtonExistence("BiggerMaterial1UpgradeButton"))
-                {
-                    var bundle = _gameState.PlayerInformation.Upgrades.Find(upgrade => upgrade.upgradeType == UpgradeTypes.UpgradeMaterialBundle) as UpgradedMaterialBundle;
-
-                    Button button = SetUpButton("BiggerMaterial1UpgradeButton", 
-                        LoadBitmap(bundle.IconFileName, 800),
-                        $"{bundle.Name} ${bundle.cost}\n{bundle.Description}");
-                    button.Click += (object? sender, RoutedEventArgs e) =>
-                    {
-                        if (_gameState.HandleUpgradePurchase(UpgradeTypes.UpgradeMaterialBundle))
-                        {
-                            _gameState.HasPurchasedBiggerMaterial1 = true;
-                            UpgradePanel.Children.Remove(button);
-                        }
-                       
-                    };
-                    UpgradePanel.Children.Add(button);
-                }
-            }
-            if (_gameState.HasUnlockedAutoMaterial && !_gameState.HasPurchasedAutoMaterial)
+            foreach (UpgradeTypes upgradeType in _gameState.UnlockPurchases.Keys) 
             {
-                if (!CheckButtonExistence("AutoMaterialUpgradeButton"))
+                var upgrade = _gameState.PlayerInformation.Upgrades.Find(upgrade => upgrade.upgradeType == upgradeType);
+                if (_gameState.UnlockPurchases[upgradeType].Unlocked && !_gameState.UnlockPurchases[upgradeType].Purchase && !(upgrade is AutoMaker) )
                 {
-                    var automat = _gameState.PlayerInformation.Upgrades.Find(upgrade => upgrade.upgradeType == UpgradeTypes.UpgradeAutobuyMaterial) as UpgradeAutobuyMaterial;
-                    Button button = SetUpButton("AutoMaterialUpgradeButton", 
-                        LoadBitmap(automat.IconFileName, 800), 
-                        $"{automat.Name} ${automat.cost}\n{automat.Description}");
-                    button.Click += (object? sender, RoutedEventArgs e) =>
+                    var name = upgrade.Name;
+                    if (!CheckButtonExistence(Utility.ReplaceWhitespace(name, "") + "Button"))
                     {
-                        if (_gameState.HandleUpgradePurchase(UpgradeTypes.UpgradeAutobuyMaterial))
+                        Button button = SetUpButton(name,
+                        LoadBitmap(upgrade.IconFileName, 800),
+                        $"{upgrade.Name} ${upgrade.cost}\n{upgrade.Description}");
+                        button.Click += (object? sender, RoutedEventArgs e) =>
                         {
-                            _gameState.HasPurchasedAutoMaterial = true;
-                            UpgradePanel.Children.Remove(button);
-                        }
+                            if (_gameState.HandleUpgradePurchase(upgradeType))
+                            {
+                                var purchase = _gameState.UnlockPurchases[upgradeType];
+                                purchase.Purchase = true;
+                                _gameState.UnlockPurchases[upgradeType] = purchase;
+                                UpgradePanel.Children.Remove(button);
+
+                            }
+                        };
                         
-                    };
-                    UpgradePanel.Children.Add(button);
-                }
-            }
-            if (_gameState.HasUnlockedMarketingLevel1 && !_gameState.HasPurchasedMarketingLevel1)
-            {
-                if (!CheckButtonExistence("MarketingLevel1UpgradeButton"))
-                {
-                    var marketing = _gameState.PlayerInformation.Upgrades.Find(upgrade => upgrade.upgradeType == UpgradeTypes.UpgradeMarketing) as UpgradeMarketing;
-                    
-                    Button button = SetUpButton("MarketingLevel1UpgradeButton", LoadBitmap(marketing.IconFileName, 800), $"{marketing.Name} ${marketing.cost}\n{marketing.Description}");
-                    button.Click += (object? sender, RoutedEventArgs e) =>
-                    {
-                        if (_gameState.HandleUpgradePurchase(UpgradeTypes.UpgradeMarketing))
-                        {
-                            _gameState.HasPurchasedMarketingLevel1 = true;
-                            UpgradePanel.Children.Remove(button);
-                        }
+                        UpgradePanel.Children.Add(button);
+                        this.Width = x;
+                        this.Height = y;
+                        
 
-                    };
-                    UpgradePanel.Children.Add(button);
+                    }
                 }
-            }
-            
+            } 
         }
         
         private Button SetUpButton(string name, BitmapImage image, string tooltip)
         {
-            Button button = new Button();
-            button.Name = name;
-            button.Content = new Image { Source = image };
-            button.ToolTip = tooltip;
-            button.FontSize = 16;
-            button.HorizontalContentAlignment = HorizontalAlignment.Center;
-            button.HorizontalAlignment = HorizontalAlignment.Center;
-            button.VerticalAlignment = VerticalAlignment.Center;
-            button.Margin = new Thickness(7);
-            button.Width = button.Height = 75;
+            Button button = new Button()
+            {
+                Name = Utility.ReplaceWhitespace(name, "") + "Button",
+                Content = new Image { Source = image },
+                ToolTip = tooltip,
+                FontSize = 16,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(7),
+                Width = Height = 100
+            };
             return button;
 
         }
@@ -309,14 +301,7 @@ namespace TShirtSim
             _gameState.HandleUpgradePurchase(UpgradeTypes.AutoSewingMachine);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-
-        }
+       
+        
     }
 }

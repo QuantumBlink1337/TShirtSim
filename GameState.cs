@@ -11,6 +11,7 @@ using TShirtSim.Upgrades;
 
 namespace TShirtSim
 {
+
     internal class GameState
     {
         private readonly string filename = "tshirt_sim.json";
@@ -20,29 +21,24 @@ namespace TShirtSim
 
         private DispatcherTimer UpdateTimer = new DispatcherTimer();
         private DispatcherTimer SaveTimer = new DispatcherTimer();
+        private Dictionary<UpgradeTypes, UnlockPurchase> unlockPurchases = [];
 
 
-
-        public bool HasUnlockedSewingMachine { get; set; }
-        public bool HasUnlockedRandomizedMaterialCost { get; set; }
-        public bool HasUnlockedAutoMaterial { get; set; }
-        public bool HasUnlockedBiggerMaterial1 { get; set; }
-        public bool HasUnlockedMarketingLevel1 { get; set; }
-        public bool HasPurchasedBiggerMaterial1 { get; set; }
-        public bool HasPurchasedAutoMaterial { get; set; }
-        public bool HasPurchasedMarketingLevel1 { get; set; }
-
-       
-
+        public Dictionary<UpgradeTypes, UnlockPurchase> UnlockPurchases { get { return unlockPurchases; } }
+    
 
         public GameState() {
 
-            HasUnlockedSewingMachine = false;
-            HasUnlockedRandomizedMaterialCost = false;
-            HasUnlockedAutoMaterial = false;    
-            HasUnlockedBiggerMaterial1 = false;
-            HasPurchasedBiggerMaterial1 = false;
-            HasPurchasedAutoMaterial = false;
+            
+            InitializeUnlockPurchases();
+
+        }
+        private void InitializeUnlockPurchases()
+        {
+            UnlockPurchases.Add(UpgradeTypes.AutoSewingMachine, new UnlockPurchase(false, false));
+            UnlockPurchases.Add(UpgradeTypes.UpgradeAutobuyMaterial, new UnlockPurchase(false, false));
+            UnlockPurchases.Add(UpgradeTypes.UpgradeMarketing, new UnlockPurchase(false, false));
+            UnlockPurchases.Add(UpgradeTypes.UpgradeMaterialBundle, new UnlockPurchase(false, false));
 
         }
         public void InitializeTimers()
@@ -121,7 +117,7 @@ namespace TShirtSim
         }
         private void AutoBuyMaterial(object? sender, EventArgs e)
         {
-            if (HasPurchasedAutoMaterial)
+            if (UnlockPurchases[UpgradeTypes.UpgradeAutobuyMaterial].Purchase)
             {
                 PlayerInformation.AutoPurchaseMaterial();
             }
@@ -129,29 +125,36 @@ namespace TShirtSim
         
         private void CheckProgression(object? sender, EventArgs e)
         {
+            UnlockPurchase unlockPurchase;
             if (PlayerInformation.AmountSold >= 150)
             {
-                HasUnlockedSewingMachine = true;
-            }
-            if (PlayerInformation.AmountSold >= 350)
-            {
-                HasUnlockedRandomizedMaterialCost = true;
+                unlockPurchase = UnlockPurchases[UpgradeTypes.AutoSewingMachine];
+                unlockPurchase.Unlocked = true;
+                UnlockPurchases[UpgradeTypes.AutoSewingMachine] = unlockPurchase;
             }
             if (PlayerInformation.AmountSold >= 450)
             {
-                HasUnlockedBiggerMaterial1 = true;
+                unlockPurchase = UnlockPurchases[UpgradeTypes.UpgradeMaterialBundle];
+                unlockPurchase.Unlocked = true;
+                UnlockPurchases[UpgradeTypes.UpgradeMaterialBundle] = unlockPurchase;
             }
             if (PlayerInformation.AmountSold >= 600)
             {
-                HasUnlockedAutoMaterial = true;
+                unlockPurchase = UnlockPurchases[UpgradeTypes.UpgradeAutobuyMaterial];
+                unlockPurchase.Unlocked = true;
+                UnlockPurchases[UpgradeTypes.UpgradeAutobuyMaterial] = unlockPurchase;
             }
             if (PlayerInformation.AmountSold >= 100)
             {
-                HasUnlockedMarketingLevel1 = true;
+                unlockPurchase = UnlockPurchases[UpgradeTypes.UpgradeMarketing];
+                unlockPurchase.Unlocked = true;
+                UnlockPurchases[UpgradeTypes.UpgradeMarketing] = unlockPurchase;
             }
-            if (PlayerInformation.AmountSold > 500 && HasPurchasedMarketingLevel1)
+            if (PlayerInformation.AmountSold > 500 && UnlockPurchases[UpgradeTypes.UpgradeMarketing].Purchase)
             {
-                HasPurchasedMarketingLevel1 = false;
+                unlockPurchase = UnlockPurchases[UpgradeTypes.UpgradeMarketing];
+                unlockPurchase.Purchase = false;
+                UnlockPurchases[UpgradeTypes.UpgradeMarketing] = unlockPurchase;
             }
              
         }
